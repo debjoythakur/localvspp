@@ -1,0 +1,46 @@
+Package: localvspp
+Type: Package
+Title: Multi-Resolution Local Variable Selection for Spatial Point Processes
+Version: 0.1.0
+Authors@R:
+    person("Debjoy", "Thakur", email = "debjoythakur@outlook.com",
+           role = c("aut", "cre"))
+Description: Localized variable selection for the intensity of inhomogeneous
+    Poisson point processes. Covariates are smoothed to a Berman-Turner
+    quadrature scheme, interacted with two-dimensional Haar wavelet atoms,
+    and fitted by penalized Poisson regression (LASSO, adaptive LASSO and
+    SCAD via local linear approximation) with the tuning parameter chosen
+    by a composite BIC. The result shows which predictors matter, where,
+    and at what spatial scale. Global (non-localized) counterparts are
+    provided for comparison, together with post-selection evaluation and
+    plotting tools. Ships St. Louis crime events with high-dimensional
+    built-environment features as example data.
+License: MIT + file LICENSE
+URL: https://github.com/debjoythakur/localvspp
+BugReports: https://github.com/debjoythakur/localvspp/issues
+Depends:
+    R (>= 4.1.0)
+Imports:
+    ggh4x,
+    ggplot2,
+    glmnet,
+    graphics,
+    parallel,
+    patchwork,
+    scales,
+    sf,
+    spatstat.explore,
+    spatstat.geom,
+    stats,
+    tools,
+    utils
+Suggests:
+    htmltools,
+    leaflet,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+LazyDataCompression: xz
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
