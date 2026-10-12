@@ -22,7 +22,7 @@ dim(stl_crime)               # built-in crime events + built-environment feature
 plot(sf::st_geometry(stl_boundary))
 
 set.seed(2026)               # the adaptive-LASSO weights use random CV folds
-fit <- fit_localvs(stl_crime)
+fit <- fit_localvs(stl_crime, quad_weights = "cell")
 fit                          # lambda, CBIC and number of selected terms per method
 
 selected_covariates(fit)$LLI                       # covariates active anywhere (local LASSO)
