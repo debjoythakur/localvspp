@@ -7,18 +7,17 @@
 #' @param coords Two-column matrix of event coordinates (x, y).
 #' @param ntile Number of grid tiles in x and y.
 #' @param pad Fraction of each range added on both sides of the window.
-#' @param weights `"spatstat"` uses the quadrature weights computed by
-#'   [spatstat.geom::quadscheme()] (the standard Berman-Turner weights).
-#'   `"cell"` gives every quadrature point the same weight, the grid-cell area.
-#'   The original analysis script called `weights(Q)`, which returns `NULL`
-#'   for a quadrature object and therefore fell back to `"cell"`; use
-#'   `weights = "cell"` to reproduce it.
+#' @param weights `"cell"` (default) gives every quadrature point the same
+#'   weight, the grid-cell area; this is what the paper's analysis used (the
+#'   analysis script calls `weights(Q)`, which returns `NULL` for a
+#'   quadrature object and so falls back to the cell area). `"spatstat"` uses
+#'   the standard Berman-Turner weights from [spatstat.geom::quadscheme()].
 #' @return An object of class `bt_quad`: a list with the quadrature points `U`,
 #'   indicator `y`, weights `w`, `offset`, `window`, the event pattern `ppp`,
 #'   `ntile` and `cell_area`.
 #' @export
 bt_quadrature <- function(coords, ntile = c(32, 32), pad = 0.01,
-                          weights = c("spatstat", "cell")) {
+                          weights = c("cell", "spatstat")) {
   weights <- match.arg(weights)
   coords  <- as.matrix(coords)
   padr <- function(r) r + c(-1, 1) * pad * diff(r)

@@ -111,7 +111,7 @@ plot_cbic_path <- function(object, method = "LLI") {
   p2 <- ggplot2::ggplot(dp, ggplot2::aes(log(lambda), delta, group = Coef)) +
     ggplot2::geom_line(linewidth = 0.35, alpha = 0.5, colour = "#D55E00") +
     ggplot2::geom_hline(yintercept = 0, linewidth = 0.3) + vl + lx +
-    ggplot2::labs(y = expression(hat(delta)[j](lambda))) + thm
+    ggplot2::labs(y = "Local coefficients (scaling and detail)") + thm
 
   da <- data.frame(log_lambda = log(lam), active = act)
   p3 <- ggplot2::ggplot(da, ggplot2::aes(log_lambda, active)) +

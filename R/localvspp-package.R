@@ -2,7 +2,7 @@
 #'
 #' The main entry point is [fit_localvs()], which runs the full pipeline:
 #' Berman-Turner quadrature ([bt_quadrature()]), covariate smoothing
-#' ([smooth_covariates()]), the Haar-localized design ([haar_basis_2d()],
+#' ([smooth_covariates()]), the Haar-localized design ([local_haar_basis()],
 #' [localized_design()]) and five CBIC-tuned penalized fits:
 #'
 #' * `GLI`  global LASSO
@@ -11,8 +11,10 @@
 #' * `LLI`  local (Haar-localized) LASSO
 #' * `LSI`  local (Haar-localized) SCAD
 #'
-#' Use [evaluate_localvs()] for in-sample and post-selection comparisons and
-#' [plot_performance()], [plot_intensity()], [plot_cbic_path()] for figures.
+#' Use [evaluate_localvs()] for in-sample and post-selection comparisons,
+#' [plot_performance()], [plot_intensity()], [plot_cbic_path()],
+#' [occurrence_panel()] and [location_panel()] for figures, and
+#' [selection_table()] / [selection_latex()] for the variable-selection table.
 #' Example data: [stl_crime] and [stl_boundary].
 #'
 #' @keywords internal

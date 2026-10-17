@@ -23,7 +23,8 @@ test_that("quadrature marks data and dummy points", {
   q <- bt_quadrature(xy, ntile = c(8, 8))
   expect_equal(sum(q$y), 60)
   expect_equal(length(q$w), nrow(q$U))
-  expect_true(all(q$w > 0))
-  qc <- bt_quadrature(xy, ntile = c(8, 8), weights = "cell")
-  expect_true(all(qc$w == qc$cell_area))
+  expect_true(all(q$w == q$cell_area))          # default: equal cell weights, as in the paper
+  qs <- bt_quadrature(xy, ntile = c(8, 8), weights = "spatstat")
+  expect_true(all(qs$w > 0))
+  expect_equal(sum(qs$w), diff(qs$window$xrange) * diff(qs$window$yrange), tolerance = 1e-6)
 })

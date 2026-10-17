@@ -8,7 +8,7 @@
 \description{
 The main entry point is \code{\link[=fit_localvs]{fit_localvs()}}, which runs the full pipeline:
 Berman-Turner quadrature (\code{\link[=bt_quadrature]{bt_quadrature()}}), covariate smoothing
-(\code{\link[=smooth_covariates]{smooth_covariates()}}), the Haar-localized design (\code{\link[=haar_basis_2d]{haar_basis_2d()}},
+(\code{\link[=smooth_covariates]{smooth_covariates()}}), the Haar-localized design (\code{\link[=local_haar_basis]{local_haar_basis()}},
 \code{\link[=localized_design]{localized_design()}}) and five CBIC-tuned penalized fits:
 }
 \details{
@@ -20,8 +20,10 @@ Berman-Turner quadrature (\code{\link[=bt_quadrature]{bt_quadrature()}}), covari
 \item \code{LSI}  local (Haar-localized) SCAD
 }
 
-Use \code{\link[=evaluate_localvs]{evaluate_localvs()}} for in-sample and post-selection comparisons and
-\code{\link[=plot_performance]{plot_performance()}}, \code{\link[=plot_intensity]{plot_intensity()}}, \code{\link[=plot_cbic_path]{plot_cbic_path()}} for figures.
+Use \code{\link[=evaluate_localvs]{evaluate_localvs()}} for in-sample and post-selection comparisons,
+\code{\link[=plot_performance]{plot_performance()}}, \code{\link[=plot_intensity]{plot_intensity()}}, \code{\link[=plot_cbic_path]{plot_cbic_path()}},
+\code{\link[=occurrence_panel]{occurrence_panel()}} and \code{\link[=location_panel]{location_panel()}} for figures, and
+\code{\link[=selection_table]{selection_table()}} / \code{\link[=selection_latex]{selection_latex()}} for the variable-selection table.
 Example data: \link{stl_crime} and \link{stl_boundary}.
 }
 \seealso{

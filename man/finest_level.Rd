@@ -2,7 +2,7 @@
 % Please edit documentation in R/haar.R
 \name{finest_level}
 \alias{finest_level}
-\title{Keep only the finest wavelet level}
+\title{Finest-level detail atoms (deprecated)}
 \usage{
 finest_level(haar)
 }
@@ -14,5 +14,8 @@ The same structure restricted to the finest wavelet atoms, with
 \code{atom_index} renumbered.
 }
 \description{
-Keep only the finest wavelet level
+Keeps only the detail atoms of the finest level of \code{\link[=haar_basis_2d]{haar_basis_2d()}},
+without the scaling atoms. This was the localized basis in localvspp 0.1.0;
+the paper's basis also includes the finest-level scaling atoms and is
+built by \code{\link[=local_haar_basis]{local_haar_basis()}}.
 }

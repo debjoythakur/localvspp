@@ -84,3 +84,62 @@ location_panel <- function(object, row, boundary, large = FALSE) {
   m <- leaflet::fitBounds(m, bb[["xmin"]], bb[["ymin"]], bb[["xmax"]], bb[["ymax"]])
   tags$div(style = paste0("display:flex;align-items:flex-start;box-sizing:border-box;", s$wrap), m, box)
 }
+
+#' Map of one event with its observed features (Figure 1)
+#'
+#' Shows a single event on the city map together with the values of a few
+#' built-environment features at that event. Two panels side by side give
+#' Figure 1 of the paper. Requires the \pkg{leaflet} and \pkg{htmltools}
+#' packages.
+#'
+#' @param data Data frame of events, e.g. [stl_crime].
+#' @param i Row of `data` to show.
+#' @param boundary `sf` polygon drawn on the map.
+#' @param features Feature columns listed under the map.
+#' @param marker_color Marker colour (an `awesomeIcons` colour name).
+#' @param tag Panel tag, e.g. `"(a)"`.
+#' @return An `htmltools` tag.
+#' @examples
+#' \dontrun{
+#' htmltools::browsable(htmltools::tags$div(
+#'   style = "display:grid;grid-template-columns:1fr 1fr;gap:20px;",
+#'   occurrence_panel(stl_crime, 1, stl_boundary, marker_color = "blue", tag = "(a)"),
+#'   occurrence_panel(stl_crime, 10, stl_boundary, marker_color = "purple", tag = "(b)")))
+#' }
+#' @export
+occurrence_panel <- function(data, i, boundary,
+                             features = c("primary_road_500m", "residential_road_500m", "service_road_500m",
+                                          "buildings_50m", "parking_500m"),
+                             marker_color = "blue", tag = "(a)") {
+  for (p in c("leaflet", "htmltools"))
+    if (!requireNamespace(p, quietly = TRUE)) stop("Package '", p, "' is required.", call. = FALSE)
+  tags <- htmltools::tags
+  data <- standardize_coords(data)
+  if (length(i) != 1 || i < 1 || i > nrow(data)) stop("i must be a single row of data.", call. = FALSE)
+  pt <- data[i, , drop = FALSE]
+  fld <- function(v, alt = "NA") if (v %in% names(pt)) as.character(pt[[v]]) else alt
+  features <- intersect(features, names(pt))
+  desc  <- paste0(fld("Type", "Unknown event"), " at ", fld("Road_Name", "Unknown road"))
+  popup <- paste0("<b>Type:</b> ", fld("Type"), "<br><b>Road:</b> ", fld("Road_Name"),
+                  "<br><b>Time:</b> ", fld("Occurance_Time"))
+
+  b  <- sf::st_transform(boundary, 4326); bb <- sf::st_bbox(b)
+  m <- leaflet::leaflet(width = "100%", height = 460)
+  m <- leaflet::addProviderTiles(m, leaflet::providers$CartoDB.Positron)
+  m <- leaflet::addPolygons(m, data = b, color = "black", weight = 3, opacity = 1,
+                            fill = TRUE, fillColor = "transparent", fillOpacity = 0)
+  m <- leaflet::addAwesomeMarkers(m, pt$longitude, pt$latitude, popup = popup, label = desc,
+         icon = leaflet::makeAwesomeIcon(icon = "star", markerColor = marker_color,
+                                         iconColor = "white", library = "fa"))
+  m <- leaflet::fitBounds(m, bb[["xmin"]], bb[["ymin"]], bb[["xmax"]], bb[["ymax"]])
+
+  feat <- paste0("<p><b>Observed features:</b></p><ul style='font-size:14px;'>",
+                 paste0("<li><b>", features, "</b>: ", unlist(pt[1, features]), "</li>", collapse = ""),
+                 "</ul>")
+  tags$div(style = "border:1px solid #bdbdbd;border-radius:6px;padding:8px;",
+           tags$h3(paste0(tag, " Occurrence ", i, ": ", desc),
+                   style = "text-align:center;font-family:Arial;font-size:16px;"),
+           m,
+           tags$div(htmltools::HTML(feat),
+                    style = "background:#f7f7f7;padding:10px;margin-top:8px;border-radius:6px;border:1px solid #ddd;"))
+}

@@ -10,7 +10,7 @@ fit_localvs(
   ntile = c(32, 32),
   J = 3,
   sigma = 0.01,
-  quad_weights = c("spatstat", "cell"),
+  quad_weights = c("cell", "spatstat"),
   covariates = NULL,
   tol = 1e-08,
   scad_args = list(),
@@ -26,11 +26,13 @@ columns, e.g. \link{stl_crime}.}
 \item{ntile}{Quadrature grid size (x, y).}
 
 \item{J}{Number of Haar resolution levels; the localized design uses the
-finest wavelet level \code{J - 1}.}
+\eqn{4^J} scaling and detail atoms at level \code{J - 1}.}
 
 \item{sigma}{Covariate smoothing bandwidth.}
 
-\item{quad_weights}{Passed to \code{\link[=bt_quadrature]{bt_quadrature()}} as \code{weights}.}
+\item{quad_weights}{Passed to \code{\link[=bt_quadrature]{bt_quadrature()}} as \code{weights}. The default
+\code{"cell"} (equal cell-area weights) is what the paper's analysis used;
+\code{"spatstat"} gives the standard Berman-Turner weights.}
 
 \item{covariates}{Optional data frame of covariates (one row per event);
 defaults to \code{\link[=crime_covariates]{crime_covariates()}}\code{(data)}.}
@@ -46,13 +48,14 @@ An object of class \code{localvs}.
 }
 \description{
 Runs the whole pipeline on a data frame of events: Berman-Turner
-quadrature, covariate smoothing, the finest-level Haar-localized design
-and the requested CBIC-tuned fits.
+quadrature, covariate smoothing, the Haar-localized design (scaling and
+detail atoms at level \code{J - 1}, see \code{\link[=local_haar_basis]{local_haar_basis()}}) and the requested
+CBIC-tuned fits. The defaults reproduce the analysis in the paper.
 }
 \examples{
 \dontrun{
 set.seed(2026)                       # adaptive-LASSO weights use random CV folds
-fit <- fit_localvs(stl_crime)
+fit <- fit_localvs(stl_crime)        # reproduces the paper (J = 3, cell weights)
 fit
 selected_covariates(fit)$LLI
 ev <- evaluate_localvs(fit)

@@ -8,7 +8,7 @@ bt_quadrature(
   coords,
   ntile = c(32, 32),
   pad = 0.01,
-  weights = c("spatstat", "cell")
+  weights = c("cell", "spatstat")
 )
 }
 \arguments{
@@ -18,12 +18,11 @@ bt_quadrature(
 
 \item{pad}{Fraction of each range added on both sides of the window.}
 
-\item{weights}{\code{"spatstat"} uses the quadrature weights computed by
-\code{\link[spatstat.geom:quadscheme]{spatstat.geom::quadscheme()}} (the standard Berman-Turner weights).
-\code{"cell"} gives every quadrature point the same weight, the grid-cell area.
-The original analysis script called \code{weights(Q)}, which returns \code{NULL}
-for a quadrature object and therefore fell back to \code{"cell"}; use
-\code{weights = "cell"} to reproduce it.}
+\item{weights}{\code{"cell"} (default) gives every quadrature point the same
+weight, the grid-cell area; this is what the paper's analysis used (the
+analysis script calls \code{weights(Q)}, which returns \code{NULL} for a
+quadrature object and so falls back to the cell area). \code{"spatstat"} uses
+the standard Berman-Turner weights from \code{\link[spatstat.geom:quadscheme]{spatstat.geom::quadscheme()}}.}
 }
 \value{
 An object of class \code{bt_quad}: a list with the quadrature points \code{U},

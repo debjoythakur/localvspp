@@ -1,13 +1,14 @@
 Package: localvspp
 Type: Package
 Title: Multi-Resolution Local Variable Selection for Spatial Point Processes
-Version: 0.1.0
+Version: 0.2.0
 Authors@R:
     person("Debjoy", "Thakur", email = "debjoythakur@outlook.com",
            role = c("aut", "cre"))
 Description: Localized variable selection for the intensity of inhomogeneous
     Poisson point processes. Covariates are smoothed to a Berman-Turner
-    quadrature scheme, interacted with two-dimensional Haar wavelet atoms,
+    quadrature scheme, interacted with two-dimensional Haar scaling and
+    wavelet atoms at the finest resolution level,
     and fitted by penalized Poisson regression (LASSO, adaptive LASSO and
     SCAD via local linear approximation) with the tuning parameter chosen
     by a composite BIC. The result shows which predictors matter, where,

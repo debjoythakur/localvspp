@@ -2,14 +2,14 @@
 % Please edit documentation in R/haar.R
 \name{haar_basis_2d}
 \alias{haar_basis_2d}
-\title{Two-dimensional Haar wavelet basis}
+\title{Two-dimensional multi-resolution Haar wavelet basis}
 \usage{
 haar_basis_2d(s, J = 3, j0 = 0, xy = s)
 }
 \arguments{
 \item{s}{Two-column matrix or data frame of locations.}
 
-\item{J}{Number of resolution levels (finest wavelet level is \code{J - 1}).}
+\item{J}{Number of resolution levels; atoms are taken at level \code{J - 1}.}
 
 \item{j0}{Coarsest level.}
 
@@ -17,13 +17,13 @@ haar_basis_2d(s, J = 3, j0 = 0, xy = s)
 coordinates (\code{x_lo}, \code{x_hi}, \code{y_lo}, \code{y_hi} in \code{meta}). Defaults to \code{s}.}
 }
 \value{
-A list with the basis matrix \code{B} (one column per atom) and a data
-frame \code{meta} describing each atom (\code{j}, \code{type}, \code{kx}, \code{ky}, its support).
+A list with the basis matrix \code{B} and the atom description \code{meta}.
 }
 \description{
-Evaluates the tensor-product Haar basis at the given locations after
-rescaling them to the unit square: scaling functions (\code{phi}) at level \code{j0}
-and wavelets (\code{psi_x}, \code{psi_y}, \code{psi_xy}) at levels \verb{j0, ..., J - 1}.
+Evaluates the full tensor-product Haar basis after rescaling the locations
+to the unit square: scaling functions (\code{phi}) at level \code{j0} and wavelets
+(\code{psi_x}, \code{psi_y}, \code{psi_xy}) at levels \verb{j0, ..., J - 1}. The localized
+fits in \code{\link[=fit_localvs]{fit_localvs()}} use \code{\link[=local_haar_basis]{local_haar_basis()}} instead.
 }
 \examples{
 h <- haar_basis_2d(cbind(runif(50), runif(50)), J = 2)

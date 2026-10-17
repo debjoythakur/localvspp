@@ -1,17 +1,20 @@
 #' Fit global and Haar-localized penalized point-process models
 #'
 #' Runs the whole pipeline on a data frame of events: Berman-Turner
-#' quadrature, covariate smoothing, the finest-level Haar-localized design
-#' and the requested CBIC-tuned fits.
+#' quadrature, covariate smoothing, the Haar-localized design (scaling and
+#' detail atoms at level `J - 1`, see [local_haar_basis()]) and the requested
+#' CBIC-tuned fits. The defaults reproduce the analysis in the paper.
 #'
 #' @param data Data frame of events with longitude/latitude and covariate
 #'   columns, e.g. [stl_crime].
 #' @param methods Any of `"GLI"`, `"GSI"`, `"GALI"`, `"LLI"`, `"LSI"`.
 #' @param ntile Quadrature grid size (x, y).
 #' @param J Number of Haar resolution levels; the localized design uses the
-#'   finest wavelet level `J - 1`.
+#'   \eqn{4^J} scaling and detail atoms at level `J - 1`.
 #' @param sigma Covariate smoothing bandwidth.
-#' @param quad_weights Passed to [bt_quadrature()] as `weights`.
+#' @param quad_weights Passed to [bt_quadrature()] as `weights`. The default
+#'   `"cell"` (equal cell-area weights) is what the paper's analysis used;
+#'   `"spatstat"` gives the standard Berman-Turner weights.
 #' @param covariates Optional data frame of covariates (one row per event);
 #'   defaults to [crime_covariates()]`(data)`.
 #' @param tol Threshold for treating a coefficient as non-zero.
@@ -21,7 +24,7 @@
 #' @examples
 #' \dontrun{
 #' set.seed(2026)                       # adaptive-LASSO weights use random CV folds
-#' fit <- fit_localvs(stl_crime)
+#' fit <- fit_localvs(stl_crime)        # reproduces the paper (J = 3, cell weights)
 #' fit
 #' selected_covariates(fit)$LLI
 #' ev <- evaluate_localvs(fit)
@@ -29,7 +32,7 @@
 #' }
 #' @export
 fit_localvs <- function(data, methods = names(method_labels), ntile = c(32, 32), J = 3,
-                        sigma = 0.01, quad_weights = c("spatstat", "cell"), covariates = NULL,
+                        sigma = 0.01, quad_weights = c("cell", "spatstat"), covariates = NULL,
                         tol = 1e-8, scad_args = list(), verbose = TRUE) {
   methods <- match.arg(methods, names(method_labels), several.ok = TRUE)
   data <- standardize_coords(data)
@@ -40,7 +43,8 @@ fit_localvs <- function(data, methods = names(method_labels), ntile = c(32, 32),
   quad <- bt_quadrature(as.matrix(data[c("longitude", "latitude")]), ntile = ntile,
                         weights = match.arg(quad_weights))
   say(sprintf("Quadrature: %d points (%d events, %d dummy)", nrow(quad$U), sum(quad$y), sum(quad$y == 0)))
-  haar <- finest_level(haar_basis_2d(quad$U, J = J))
+  haar <- local_haar_basis(quad$U, J = J)
+  say(sprintf("Haar basis: J = %d, %d blocks, %d atoms", J, 4^(J - 1), ncol(haar$B)))
   say("Smoothing ", ncol(X), " covariates to the quadrature points")
   Xq   <- smooth_covariates(X, quad, sigma = sigma, dimyx = ntile)
   Z    <- localized_design(Xq, haar$B, haar$meta)
