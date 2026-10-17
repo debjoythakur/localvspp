@@ -4,7 +4,11 @@
 \alias{selection_table}
 \title{Variable-selection table across methods}
 \usage{
-selection_table(object, categories = default_categories(), labels = character(0))
+selection_table(
+  object,
+  categories = default_categories(),
+  labels = character(0)
+)
 }
 \arguments{
 \item{object}{A \code{localvs} fit.}
